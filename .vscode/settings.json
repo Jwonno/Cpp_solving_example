@@ -24,5 +24,6 @@
         "string_view": "cpp",
         "system_error": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
