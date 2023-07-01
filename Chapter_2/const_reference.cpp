@@ -1,5 +1,6 @@
 /* 상수에 대한 참조자 */
 #include <iostream>
+
 int main(){
     // int &ref = 4;
     // 위와 같은 문장으로 실행하면 오류가 난다.
