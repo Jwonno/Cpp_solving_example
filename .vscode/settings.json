@@ -23,7 +23,22 @@
         "streambuf": "cpp",
         "string_view": "cpp",
         "system_error": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "array": "cpp",
+        "atomic": "cpp",
+        "cstddef": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "optional": "cpp",
+        "string": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "cmake.configureOnOpen": false
 }
