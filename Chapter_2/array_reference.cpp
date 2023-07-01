@@ -21,7 +21,7 @@ int main(){
 }*/
 
 /* 배열들의 레퍼런스 */
-#include <iostream>
+/*#include <iostream>
 
 int main(){
     int arr[3] = {1, 2, 3};
@@ -38,4 +38,4 @@ int main(){
     int (&ref2)[3][2] = arr2;
 
     return 0;
-}
+}*/
