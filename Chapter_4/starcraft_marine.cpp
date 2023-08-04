@@ -8,62 +8,78 @@ class Marine{
     bool is_dead;
     char *name;                  // 마린의 이름        
 
+    const int default_damage;   // 기본 공격력
+
     public:
      Marine();                  // default constructor
      Marine(int x, int y);      // 좌표 (x, y) 에 마린 생성
      Marine(int x, int y, const char *marine_name); // 마린 이름까지 지정
+     Marine(int x, int y, int default_damage);  // 기본 공격력까지 지정   
      ~Marine();                 // Destructor 
      // 소멸자는 생성자처럼 class 의 이름을 쓰는데, 앞에 ~ 만 붙여주면된다.
      // 소멸자는 인자를 받지 않기 때문에 overloading 되지도 않는다.
 
-     int attack();                      // 데미지를 리턴한다.
+     int attack();                       // 데미지를 리턴한다.
      void be_attacked(int damage_earn);  // 받는 데미지
-     void move(int x, int y);           // 새로운 위치
+     void move(int x, int y);            // 새로운 위치
 
-     void show_status();                // 상태를 보여준다.
+     void show_status();                 // 상태를 보여준다.
 };
 
-Marine::Marine(){
-    hp = 50;
-    coord_x = coord_y = 0;
-    damage = 5;
-    is_dead = false;
-    name = NULL;
-}
+// Marine::Marine(){
+//     hp = 50;
+//     coord_x = coord_y = 0;
+//     damage = 5;
+//     is_dead = false;
+//     name = NULL;
+// }
 
-Marine::Marine(int x, int y){
-    coord_x = x;
-    coord_y = y;
-    hp = 50;
-    damage =5;
-    is_dead = false;
-    name = NULL;
-}
+// Marine::Marine(int x, int y){
+//     coord_x = x;
+//     coord_y = y;
+//     hp = 50;
+//     damage =5;
+//     is_dead = false;
+//     name = NULL;
+// }
 
-Marine::Marine(int x, int y, const char* marine_name){
+// 초기화 리스트(initializer list) 를 이용
+Marine::Marine()
+    : hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false){}
+
+Marine::Marine(int x, int y)
+    : hp(50), coord_x(x), coord_y(y), default_damage(5), is_dead(false){}
+Marine::Marine(int x, int y, int default_damage)
+    : coord_x(x),
+      coord_y(y),
+      hp(50),
+      default_damage(5),
+      is_dead(false) {}
+
+Marine::Marine(int x, int y, const char* marine_name)
+    : default_damage(5){
     name = new char[strlen(marine_name) + 1];
     strcpy(name, marine_name);
-
     coord_x = x;
     coord_y = y;
     hp = 50;
-    damage = 5;
     is_dead = false;
 }
+
 
 void Marine::move(int x, int y){
     coord_x = x;
     coord_y = y;
 }
 
-int Marine::attack(){return damage;}
+int Marine::attack(){return default_damage;}
 void Marine::be_attacked(int damage_earn){
     hp -= damage_earn;
     if(hp < 0)  is_dead = true;
 }
 
 void Marine::show_status(){
-    std::cout << "*** Marine " << name << " ***" << std::endl;
+    // std::cout << "*** Marine " << name << " ***" << std::endl;
     std::cout << " Location: { "<< coord_x << ", " << coord_y << " }" << std::endl;
     std::cout << "HP: " << hp << std::endl;
 }
@@ -107,5 +123,17 @@ int main(){
     delete marine[0];
     delete marine[1];
     // 객체가 위와 같이 소멸될 때 destructor(~Marine(){...}) 가 호출된다.
+
+    Marine marine3(2, 3, 10);
+    Marine marine4(3, 5, 10);
+
+    marine3.show_status();
+    marine4.show_status();
+
+    std::cout << std::endl << "마린 3 이 마린 4 를 공격!" << std::endl;
+    marine4.be_attacked(marine3.attack());
+
+    marine3.show_status();
+    marine4.show_status();
     return 0;
 }
