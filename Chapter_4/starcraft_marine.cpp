@@ -19,7 +19,7 @@ class Marine{
     //  Marine(int x, int y, const char *marine_name); // 마린 이름까지 지정
      Marine(int x, int y, int default_damage);  // 기본 공격력까지 지정   
 
-     int attack();                       // 데미지를 리턴한다.
+     int attack() const;                       // 데미지를 리턴한다.
      // void be_attacked(int damage_earn);  // 받는 데미지
      Marine& be_attacked(int damage_earn);  // 받는 데미지(레퍼런스를 리턴)
      void move(int x, int y);            // 새로운 위치
@@ -93,7 +93,7 @@ void Marine::move(int x, int y){
     coord_y = y;
 }
 
-int Marine::attack(){return default_damage;}
+int Marine::attack() const { return default_damage; }
 // void Marine::be_attacked(int damage_earn){
 Marine& Marine::be_attacked(int damage_earn){
     hp -= damage_earn;
