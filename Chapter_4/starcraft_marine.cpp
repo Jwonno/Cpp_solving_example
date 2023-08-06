@@ -159,8 +159,8 @@ int main(){
     marine3.show_status();
     marine4.show_status();
 
-    std::cout << std::endl << "마린 3 이 마린 4 를 공격!" << std::endl;
-    marine4.be_attacked(marine3.attack());
+    std::cout << std::endl << "마린 3 이 마린 4 를 두 번 공격!" << std::endl;
+    marine4.be_attacked(marine3.attack()).be_attacked(marine3.attack());
 
     marine3.show_status();
     marine4.show_status();
