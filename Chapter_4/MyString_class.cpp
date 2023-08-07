@@ -62,16 +62,19 @@ MyString::MyString(char c){
     string_content = new char[1];
     string_content[0] = c;
     string_length = 1;
+    memory_capacity = 1;
 }
 
 MyString::MyString(const char *str){
     string_length = strlen(str);
+    memory_capacity = string_length;
     string_content = new char[string_length];
     for(int i = 0; i < string_length; i++) string_content[i] = str[i];
 }
 
 MyString::MyString(const MyString& str){
     string_length = str.string_length;
+    memory_capacity = string_length;
     string_content = new char[string_length];
     for(int i = 0; i < string_length; i++) string_content[i] = str.string_content[i];
 }
@@ -207,6 +210,7 @@ MyString& MyString::insert(int loc, char c){
 MyString& MyString::erase(int loc, int num){
     if(num < 0 || num > string_length) return *this;
     // else
+    if(num + loc > string_length) num = string_length - loc;
     // Erasing is just pulling the characters from behind to the front
      for(int i = loc + num; i <string_length; i++){ 
         string_content[i - num] = string_content[i];
@@ -271,7 +275,7 @@ int main(){
     str3.println();
 
     MyString str4("abcde");
-    str4.erase(2, 2);
+    str4.erase(3, 4);
     str4.println();
 
     std::cout << "location of the character 'd' in str4: " << str4.find(0, 'd') << std::endl;
