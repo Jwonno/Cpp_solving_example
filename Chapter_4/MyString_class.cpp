@@ -48,6 +48,14 @@ class MyString {
 
     // Erase
     MyString& erase(int loc, int num);
+
+    // Find
+    int find(int find_from, MyString& str) const;
+    int find(int find_from, const char* str) const;
+    int find(int find_from, char c) const;
+
+    // Compare
+    int compare(const MyString& str) const;
 };
 
 MyString::MyString(char c){
@@ -136,13 +144,14 @@ char MyString::at(int i) const{
         // if i exceed length, return origin string(*this)
         if(i >= string_length || i < 0) return NULL;
         else return string_content[i];
-    }
+}
 
 MyString& MyString::insert(int loc, const MyString& str){
     if(loc < 0 || loc > string_length) return *this;
     if(string_length + str.string_length > memory_capacity){
         // Reallocating
-        // To avoid frequent allocation/deallocation during the insert operation, preallocate memory
+        // To avoid frequent allocation/deallocation during the insert operation, 
+        // preallocate memory(x2)
         if(memory_capacity * 2 > string_length + str.string_length){
             memory_capacity *=2;
         }
@@ -186,12 +195,10 @@ MyString& MyString::insert(int loc, const MyString& str){
     string_length = string_length + str.string_length;
     return *this;
 }
-
 MyString& MyString::insert(int loc, const char* str){
     MyString temp(str);
     return insert(loc, temp);
 }
-
 MyString& MyString::insert(int loc, char c){
     MyString temp(c);
     return insert(loc, temp);
@@ -200,16 +207,50 @@ MyString& MyString::insert(int loc, char c){
 MyString& MyString::erase(int loc, int num){
     if(num < 0 || num > string_length) return *this;
     // else
-    // Erasing essentially involves pulling the characters from behind to the front
+    // Erasing is just pulling the characters from behind to the front
      for(int i = loc + num; i <string_length; i++){ 
         string_content[i - num] = string_content[i];
      }
      string_length -= num;
      // No matter what information comes after string_length, 
-     // you don't have to worry much about it
+     // there is no need to worry much about it
      return *this;
 }
 
+int MyString::find(int find_from, MyString& str) const {
+    // Starting from 'find_from', it returns the position of the first 'str'
+    // and if 'str' is not found, it returns -1.
+    int i, j;
+    if(str.string_length == 0) return -1;
+    for(i = find_from; i <= string_length - str.string_length; i++){
+        for(j = 0; j < str.string_length; j++){
+            if(string_content[i + j] != str.string_content[j]) break;
+        }
+        if(j == str.string_length)   return i;
+    }
+    // Not found
+    return -1;
+}
+int MyString::find(int find_from, const char* str) const {
+    MyString temp(str);
+    return find(find_from, temp);
+}
+int MyString::find(int find_from, char c) const {
+    MyString temp(c);
+    return find(find_from, temp);
+}
+
+int MyString::compare(const MyString& str) const {
+    // Perform (*this) - (str), and it returns 1, 0, -1
+    for(int i = 0; i < std::min(string_length, str.string_length); i++){
+        if(string_content[i] > str.string_content[i]) return 1;
+        else if(string_content[i] < str.string_content[i]) return -1; 
+    }
+    // If nothing is returned, the two strings are same
+    if(string_length == str.string_length) return 0;
+    else if(string_length > str.string_length) return 1;
+    return 1;
+}
 int main(){
     MyString str1("hello world!");
     MyString str2(str1);
@@ -232,6 +273,11 @@ int main(){
     MyString str4("abcde");
     str4.erase(2, 2);
     str4.println();
-    
+
+    std::cout << "location of the character 'd' in str4: " << str4.find(0, 'd') << std::endl;
+
+    MyString str5("anbds");
+    MyString str6("anbde");
+    std::cout << "Compare str5 with str6: " << str5.compare(str6) << std::endl;
     return 0;
 }
