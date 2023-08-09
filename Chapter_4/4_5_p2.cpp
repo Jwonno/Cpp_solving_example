@@ -7,6 +7,7 @@ class MyString{
     int memory_capacity;
     int string_length;
     char *string_content;
+    char *table;
 
     public:
     MyString(char c);
@@ -16,13 +17,8 @@ class MyString{
     ~MyString();
     
     void println();
-    void find_KMP(MyString& str);
-    void find_BadChar(MyString& str);
+    void FindKmp(MyString& pat);
 };
-
-void computeLPSArray(char* pat, int M, int* lps);
-
-void badCharHeuristic(char* str, int size, int badchar[256]);
 
 MyString::MyString(char c){
     string_content = new char[1];
@@ -54,79 +50,31 @@ void MyString::println(){
     std::cout << std::endl;
 }
 
-void computeLPSArray(char* pat, int M, int* lps){
-    int len = 0;
-    lps[0] = 0;
-
-    int i = 1;
-    while(i < M){
-        if(pat[len] == pat[i]){
-            lps[i] = len;
-            len++;
-            i++;
-        } else {
-            if(len != 0){
-                len = lps[len - 1];
-            } else {
-                lps[i] = 0;
-                i++;
-            }
-        }
-    }
-}
-void MyString::find_KMP(MyString& str){
-    const int M = str.string_length;
-    char* pat = new char[M];
-    for(int i = 0; i < M; i++) pat[i] = str.string_content[i];
-    int* lps = new int[M] {0};
-    computeLPSArray(pat, M, lps);
-    
+void MyString::FindKmp(MyString& pat){
+    // get kmp_table
+    table = new char[pat.string_length] {0};
     int i = 0;
-    int j = 0;
-    while(i < string_length){
-        if(pat[j] == string_content[i]){
-            i++; j++;
-        } 
-        if(j == M) {
-            std::cout << "The index of the Found string is: "
-            << i - j << std::endl;
-            j = lps[j - 1];
+    for(int j = 1; j < pat.string_length; j++){
+        while(i > 0 && pat.string_content[j] != pat.string_content[i]){
+            i = table[i - 1];
         }
-        else if(i < string_length && pat[j] != string_content[i]){
-            if(j != 0) j = lps[j - 1];
-            else i++;
+        if(pat.string_content[i] == pat.string_content[j]){
+            i++;
+            table[j] = i;
         }
     }
-    delete[] pat;
-    delete[] lps;
-}
-
-void badCharHeuristic(char* str, int size, int badchar[256]){
-    int i;
-    for(i = 0; i < 256; i++) badchar[i] = -1;
-    for(i = 0; i < size; i++) badchar[(int)str[i]] = i;
-}
-void MyString::find_BadChar(MyString& str) {
-    int m = str.string_length;
-    int n = string_length;
-    int badchar[256];
-    char* pat = new char[m];
-    for(int i = 0; i < m; i++) pat[i] = str.string_content[i];
-
-    badCharHeuristic(pat, m, badchar);
-
-    int s = 0;
-    while(s <= n - m){
-        
-        int j = m - 1;
-        
-        while(j >= 0 && pat[j] == string_content[s + j]) j--;
-        
-        if(j < 0){
-            std::cout << "The index of the Found string is: " << s << std::endl;
-            s += (s + m < n) ? m - badchar[string_content[s + m]] : 1;
-        } else {
-            s += std::max(1, j - badchar[string_content[s + j]]);
+    // kmp search
+    i = 0;
+    for(int j = 0; j < string_length; j++){
+        while(i > 0 && string_content[j] != pat.string_content[i]){
+            i = table[i - 1];
+        }
+        if(pat.string_content[i] == string_content[j]){
+            i++;
+            if(i == pat.string_length){
+                std::cout << " The index of found pattern is: " << j - i + 1<< std::endl;
+                i = table[i - 1];
+            }
         }
     }
 }
@@ -135,9 +83,7 @@ int main(){
     MyString str1("hello everyone hello hi helle.");
     MyString str2("hello");
     str1.println();
-    str1.find_KMP(str2);
 
-    str1.find_BadChar(str2);
-
+    str1.FindKmp(str2);
     return 0;
 }
