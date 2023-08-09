@@ -77,6 +77,7 @@ void MyString::FindKmp(MyString& pat){
             }
         }
     }
+    delete[] table;
 }
 
 int main(){
